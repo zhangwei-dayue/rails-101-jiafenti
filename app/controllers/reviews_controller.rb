@@ -1,13 +1,12 @@
 class ReviewsController < ApplicationController
   before_action :authenticate_user!, :only => [:new, :create]
+  before_action :check_permission, only: [:new, :create, :edit, :update, :destroy]
 
   def new
-    @movie = Movie.find(params[:movie_id])
     @review = Review.new
   end
 
   def edit
-    @movie = Movie.find(params[:movie_id])
     @review = Review.find(params[:id])
     if current_user != @review.user
       redirect_to account_reviews_path, alert: "你没有编辑评论权限！"
@@ -17,7 +16,6 @@ class ReviewsController < ApplicationController
   end
 
   def create
-    @movie = Movie.find(params[:movie_id])
     @review = Review.new(review_params)
     @review.movie = @movie
     @review.user = current_user
@@ -30,7 +28,6 @@ class ReviewsController < ApplicationController
   end
 
   def update
-    @movie = Movie.find(params[:movie_id])
     @review = Review.find(params[:id])
     if current_user != @review.user
       redirect_to account_reviews_path, alert: "你没有编辑评论权限！"
@@ -43,7 +40,6 @@ class ReviewsController < ApplicationController
   end
 
   def destroy
-    @movie = Movie.find(params[:movie_id])
     @review = Review.find(params[:id])
     if current_user != @review.user
       redirect_to account_reviews_path, alert: "你没有删除评论权限！"
@@ -55,6 +51,12 @@ class ReviewsController < ApplicationController
 
 
   private
+  def check_permission
+    @movie = Movie.find(params[:movie_id])
+    if !current_user.is_member_of?(@movie)
+      redirect_to movie_path(@movie), alert: "你还没有收藏电影，没有权限进行相应操作！"
+    end
+  end
 
   def review_params
     params.require(:review).permit(:content)

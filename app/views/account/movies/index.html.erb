@@ -17,8 +17,8 @@
       <% @movies.each do |movie| %>
         <tr>
           <td> # </td>
-          <td> <%= link_to(movie.title, movie_path(movie)) %> </td>
-          <td><%= render_movie_description(movie) %></td>
+          <td> <%= link_to(movie.filmname, movie_path(movie)) %> </td>
+          <td><%= render_movie_introduction(movie) %></td>
           <td> <%= movie.reviews.count %> </td>
           <td> <%= movie.updated_at %> </td>
         </tr>

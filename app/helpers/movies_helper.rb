@@ -1,5 +1,5 @@
 module MoviesHelper
-  def render_movie_description(movie)
-    simple_format(movie.description)
+  def render_movie_introduction(movie)
+    simple_format(movie.introduction)
   end
 end

@@ -21,6 +21,7 @@ class MoviesController < ApplicationController
     @movie = Movie.new(movie_params)
     @movie.user = current_user
     if @movie.save
+      current_user.favorite!(@movie)
       redirect_to movies_path
     else
       render :new
@@ -42,7 +43,7 @@ class MoviesController < ApplicationController
   end
 
   def favorite
-   @movie = Movie.find(params[:id])
+    @movie = Movie.find(params[:id])
 
     if !current_user.is_member_of?(@movie)
       current_user.favorite!(@movie)
